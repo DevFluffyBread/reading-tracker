@@ -2,11 +2,17 @@ var titulo= document.getElementById("titulo");
 var autor= document.getElementById("autor");
 var capa= document.getElementById("capa");
 var nota= document.getElementById("nota");
-var botao= document.getElementById("botao");
 var formulario= document.getElementById("formulario");
 var lista= document.getElementById("lista");
 
-const livros = JSON.parse(localStorage.getItem("livros")) || [];
+let livros = [];
+
+try {
+    const dadosSalvos = localStorage.getItem("livros");
+    livros = dadosSalvos ? JSON.parse(dadosSalvos) : [];
+} catch (erro) {
+    console.error("Não foi possível carregar os livros:", erro);
+}
 
 formulario.addEventListener("submit", function(evento){
     evento.preventDefault();
@@ -29,6 +35,7 @@ formulario.addEventListener("submit", function(evento){
     localStorage.setItem("livros", JSON.stringify(livros));
 
     renderizar();
+    formulario.reset();
 });
 
 function renderizar() {
@@ -62,3 +69,5 @@ function renderizar() {
         lista.appendChild(item);
     });
 }
+
+renderizar();
