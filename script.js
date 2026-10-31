@@ -96,8 +96,14 @@ function renderizar() {
         const notaLivro = document.createElement("p");
         notaLivro.textContent = `Nota: ${livro.nota}/10`;
 
+        const nomesStatus = {
+            "quero-ler": "Quero ler",
+            lendo: "Lendo",
+            concluido: "Concluído"
+    };
+
         const statusLivro = document.createElement("p");
-        statusLivro.textContent = `Status: ${livro.status}`;
+        statusLivro.textContent =  `Status: ${nomesStatus[livro.status ?? "concluido"]}`;;
 
         item.appendChild(tituloLivro);
         item.appendChild(autorLivro);
@@ -112,6 +118,7 @@ function renderizar() {
 
             item.appendChild(imagem);
         }
+        
 
         const botaoExcluir = document.createElement("button");
         botaoExcluir.type = "button";
@@ -128,6 +135,8 @@ function renderizar() {
         botaoEditar.addEventListener("click", function () {
         editarLivro(livro.id);
     });
+
+    
 
         item.appendChild(botaoEditar);
         item.appendChild(botaoExcluir);
@@ -185,6 +194,7 @@ function editarLivro(id) {
     autor.value = livro.autor;
     capa.value = livro.capa;
     nota.value = livro.nota;
+    statusLeitura.value = livro.status ?? "concluido";
 
     botaoSalvar.textContent = "Salvar alterações";
     titulo.focus();
