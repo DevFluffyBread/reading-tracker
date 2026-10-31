@@ -22,9 +22,10 @@ formulario.addEventListener("submit", function(evento){
     const autorLimpo = autor.value.trim();
 
     if(!tituloLimpo || !autorLimpo){
-    alert("Preencha os campos de título e autor.");
-    return;
-}
+        alert("Preencha os campos de título e autor.");
+        return;
+    }
+
     const livro = {
         titulo: tituloLimpo,
         autor: autorLimpo,
@@ -33,27 +34,27 @@ formulario.addEventListener("submit", function(evento){
     };
 
     try {
-    const livrosAtualizados = [...livros, livro];
+        const livrosAtualizados = [...livros, livro];
 
-    localStorage.setItem(
-        "livros",
-        JSON.stringify(livrosAtualizados)
-    );
+        localStorage.setItem(
+            "livros",
+            JSON.stringify(livrosAtualizados)
+        );
 
-    livros = livrosAtualizados;
-} catch (erro) {
-    console.error("Não foi possível salvar o livro:", erro);
+        livros = livrosAtualizados;
+    } catch (erro) {
+        console.error("Não foi possível salvar o livro:", erro);
 
-    alert(
-        "Não foi possível salvar o livro. " +
-        "O armazenamento pode estar cheio ou bloqueado."
-    );
+        alert(
+            "Não foi possível salvar o livro. " +
+            "O armazenamento pode estar cheio ou bloqueado."
+        );
 
-    return;
-}
+        return;
+    }
 
-renderizar();
-formulario.reset();
+    renderizar();
+    formulario.reset();
 });
 
 function renderizar() {
