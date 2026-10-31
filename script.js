@@ -4,13 +4,25 @@ var capa= document.getElementById("capa");
 var nota= document.getElementById("nota");
 var formulario= document.getElementById("formulario");
 var lista= document.getElementById("lista");
+let idEmEdicao = null;
+const botaoSalvar = document.getElementById("botao");
 
 let livros = [];
 
 try {
     const dadosSalvos = localStorage.getItem("livros");
     const dados = dadosSalvos ? JSON.parse(dadosSalvos) : [];
-    livros = Array.isArray(dados) ? dados : [];
+    livros = Array.isArray(dados)
+    ? dados.map(function (livro) {
+        return {
+            ...livro,
+            id: livro.id || crypto.randomUUID()
+        };
+    })
+    : [];
+
+    localStorage.setItem("livros", JSON.stringify(livros)); 
+
 } catch (erro) {
     console.error("Não foi possível carregar os livros:", erro);
 }
@@ -27,6 +39,7 @@ formulario.addEventListener("submit", function(evento){
     }
 
     const livro = {
+        id: crypto.randomUUID(),
         titulo: tituloLimpo,
         autor: autorLimpo,
         capa: capa.value.trim(),
@@ -34,7 +47,13 @@ formulario.addEventListener("submit", function(evento){
     };
 
     try {
-        const livrosAtualizados = [...livros, livro];
+        const livrosAtualizados = idEmEdicao === null
+        ? [...livros, livro]
+        : livros.map(function (livroAtual) {
+        return livroAtual.id === idEmEdicao
+            ? { ...livroAtual, ...livro }
+            : livroAtual;
+    });
 
         localStorage.setItem(
             "livros",
@@ -52,6 +71,9 @@ formulario.addEventListener("submit", function(evento){
 
         return;
     }
+
+    idEmEdicao = null;
+    botaoSalvar.textContent = "Adicionar Livro";
 
     renderizar();
     formulario.reset();
@@ -85,8 +107,79 @@ function renderizar() {
             item.appendChild(imagem);
         }
 
+        const botaoExcluir = document.createElement("button");
+        botaoExcluir.type = "button";
+        botaoExcluir.textContent = "Excluir";
+
+        botaoExcluir.addEventListener("click", function () {
+        excluirLivro(livro.id);
+    });
+
+        const botaoEditar = document.createElement("button");
+        botaoEditar.type = "button";
+        botaoEditar.textContent = "Editar";
+
+        botaoEditar.addEventListener("click", function () {
+        editarLivro(livro.id);
+    });
+
+        item.appendChild(botaoEditar);
+        item.appendChild(botaoExcluir);
         lista.appendChild(item);
     });
 }
 
 renderizar();
+
+function excluirLivro(id) {
+    const confirmado = confirm("Deseja excluir este livro?");
+
+    if (!confirmado) {
+        return;
+    }
+
+    const livrosAtualizados = livros.filter(function (livro) {
+        return livro.id !== id;
+    });
+
+    try {
+        localStorage.setItem(
+            "livros",
+            JSON.stringify(livrosAtualizados)
+        );
+
+        livros = livrosAtualizados;
+    } catch (erro) {
+        console.error("Não foi possível excluir o livro:", erro);
+        alert("Não foi possível salvar a exclusão. Tente novamente.");
+        return;
+    }
+
+    if (idEmEdicao === id) {
+        idEmEdicao = null;
+        botaoSalvar.textContent = "Adicionar Livro";
+        formulario.reset();
+    }
+
+    renderizar();
+    }
+
+function editarLivro(id) {
+    const livro = livros.find(function (livro) {
+        return livro.id === id;
+    });
+
+    if (!livro) {
+        return;
+    }
+
+    idEmEdicao = id;
+
+    titulo.value = livro.titulo;
+    autor.value = livro.autor;
+    capa.value = livro.capa;
+    nota.value = livro.nota;
+
+    botaoSalvar.textContent = "Salvar alterações";
+    titulo.focus();
+}
