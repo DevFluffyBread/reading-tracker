@@ -87,11 +87,13 @@ function renderizar() {
 
     livros.forEach(function (livro) {
         const item = document.createElement("div");
+        item.className = "livro";
 
         const tituloLivro = document.createElement("h2");
         tituloLivro.textContent = livro.titulo;
 
         const autorLivro = document.createElement("p");
+        autorLivro.className = "livro-autor";
         autorLivro.textContent = `Autor: ${livro.autor}`;
 
         const notaLivro = document.createElement("p");
@@ -105,22 +107,39 @@ function renderizar() {
             concluido: "Concluído"
     };
 
+       
+        const statusAtual = livro.status ?? "concluido";
+
         const statusLivro = document.createElement("p");
-        statusLivro.textContent =  `Status: ${nomesStatus[livro.status ?? "concluido"]}`;;
+        statusLivro.className = "livro-status";
+        statusLivro.dataset.status = statusAtual;
+        statusLivro.textContent = nomesStatus[statusAtual];
 
         item.appendChild(tituloLivro);
+        const espacoCapa = document.createElement("div");
+        espacoCapa.className = "livro-capa";
+
+        if (livro.capa) {
+        const imagem = document.createElement("img");
+        imagem.src = livro.capa;
+        imagem.alt = `Capa de ${livro.titulo}`;
+        imagem.loading = "lazy";
+
+        espacoCapa.appendChild(imagem);
+        } else {
+         const textoCapa = document.createElement("span");
+         textoCapa.textContent = livro.titulo;
+
+         espacoCapa.appendChild(textoCapa);
+        }
+
+        item.prepend(espacoCapa);
+
         item.appendChild(autorLivro);
         item.appendChild(notaLivro);
         item.appendChild(statusLivro);
 
-        if (livro.capa) {
-            const imagem = document.createElement("img");
-            imagem.src = livro.capa;
-            imagem.alt = `Capa de ${livro.titulo}`;
-            imagem.width = 120;
-
-            item.appendChild(imagem);
-        }
+        
         
 
         const botaoExcluir = document.createElement("button");
@@ -139,8 +158,13 @@ function renderizar() {
         editarLivro(livro.id);
     });
 
-        item.appendChild(botaoEditar);
-        item.appendChild(botaoExcluir);
+        const acoesLivro = document.createElement("div");
+        acoesLivro.className = "livro-acoes";
+
+        acoesLivro.appendChild(botaoEditar);
+        acoesLivro.appendChild(botaoExcluir);
+
+        item.appendChild(acoesLivro);
         lista.appendChild(item);
     });
 }

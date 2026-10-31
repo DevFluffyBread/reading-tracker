@@ -4,40 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Tracker</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <form id="formulario">
-        <div>
-            <label id="label-titulo" for="titulo">Título:</label>
-            <input type="text" id="titulo" required />
-        </div>
-        <div>
-            <label id="label-autor" for="autor">Autor:</label>
-            <input type="text" id="autor" required />
-        </div>
-        <div>
-            <label id="label-capa" for="capa">URL da Capa:</label>
-            <input type="url" id="capa" />
-        </div>
-        <div>
-            <label id="label-nota" for="nota">Nota:</label>
-            <input type="number" id="nota" min="0" max="10" step="0.5" required />
-        </div>
-        <div class="botao">
-            <div>
-            <label for="status">Status de leitura:</label>
-             <select id="status">
-                <option value="quero-ler">Quero ler</option>
-                <option value="lendo">Lendo</option>
-                <option value="concluido">Concluído</option>
-            </select>
-            </div>
-        <div class="botao">
-            <button id="botao" type="submit">Adicionar Livro</button>
-        </div>
-        </div>
-        <div id="lista" class="lista-livros"></div>
-    </form>
-    <script src= "script.js"></script>
+    <main class="biblioteca">
+        <header class="cabecalho">
+            <p class="subtitulo">Meu universo de histórias</p>
+            <h1>Minha biblioteca</h1>
+            <p>Livros para descobrir, acompanhar e recordar.</p>
+        </header>
+
+        <section class="cadastro" aria-labelledby="titulo-cadastro">
+            <h2 id="titulo-cadastro">Registrar livro</h2>
+
+            <form id="formulario">
+                <div class="campo">
+                    <label for="titulo">Título</label>
+                    <input type="text" id="titulo" required>
+                </div>
+
+                <div class="campo">
+                    <label for="autor">Autor</label>
+                    <input type="text" id="autor" required>
+                </div>
+
+                <div class="campo">
+                    <label for="capa">URL da capa</label>
+                    <input type="url" id="capa">
+                </div>
+
+                <div class="campo">
+                    <label for="status">Status de leitura</label>
+                    <select id="status">
+                        <option value="quero-ler">Quero ler</option>
+                        <option value="lendo">Lendo</option>
+                        <option value="concluido">Concluído</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="nota">Nota</label>
+                    <input
+                        type="number"
+                        id="nota"
+                        min="0"
+                        max="10"
+                        step="0.5"
+                    >
+                </div>
+
+                <div class="acoes-formulario">
+                    <button id="botao" type="submit">
+                        Adicionar Livro
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="colecao" aria-labelledby="titulo-colecao">
+            <h2 id="titulo-colecao">Suas leituras</h2>
+            <div id="lista" class="lista-livros"></div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
