@@ -6,6 +6,7 @@ var formulario= document.getElementById("formulario");
 var lista= document.getElementById("lista");
 let idEmEdicao = null;
 const botaoSalvar = document.getElementById("botao");
+const statusLeitura = document.getElementById("status");
 
 let livros = [];
 
@@ -43,7 +44,8 @@ formulario.addEventListener("submit", function(evento){
         titulo: tituloLimpo,
         autor: autorLimpo,
         capa: capa.value.trim(),
-        nota: nota.valueAsNumber
+        nota: nota.valueAsNumber,
+        status: statusLeitura.value,
     };
 
     try {
@@ -94,9 +96,13 @@ function renderizar() {
         const notaLivro = document.createElement("p");
         notaLivro.textContent = `Nota: ${livro.nota}/10`;
 
+        const statusLivro = document.createElement("p");
+        statusLivro.textContent = `Status: ${livro.status}`;
+
         item.appendChild(tituloLivro);
         item.appendChild(autorLivro);
         item.appendChild(notaLivro);
+        item.appendChild(statusLivro);
 
         if (livro.capa) {
             const imagem = document.createElement("img");
