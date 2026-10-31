@@ -39,7 +39,7 @@ formulario.addEventListener("submit", function(evento){
     }
 
     const livro = {
-        id: crypto.randomUUID(),
+        id: idEmEdicao ?? crypto.randomUUID(),
         titulo: tituloLimpo,
         autor: autorLimpo,
         capa: capa.value.trim(),
