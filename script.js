@@ -9,7 +9,8 @@ let livros = [];
 
 try {
     const dadosSalvos = localStorage.getItem("livros");
-    livros = dadosSalvos ? JSON.parse(dadosSalvos) : [];
+    const dados = dadosSalvos ? JSON.parse(dadosSalvos) : [];
+    livros = Array.isArray(dados) ? dados : [];
 } catch (erro) {
     console.error("Não foi possível carregar os livros:", erro);
 }
@@ -31,11 +32,28 @@ formulario.addEventListener("submit", function(evento){
         nota: nota.valueAsNumber
     };
 
-    livros.push(livro);
-    localStorage.setItem("livros", JSON.stringify(livros));
+    try {
+    const livrosAtualizados = [...livros, livro];
 
-    renderizar();
-    formulario.reset();
+    localStorage.setItem(
+        "livros",
+        JSON.stringify(livrosAtualizados)
+    );
+
+    livros = livrosAtualizados;
+} catch (erro) {
+    console.error("Não foi possível salvar o livro:", erro);
+
+    alert(
+        "Não foi possível salvar o livro. " +
+        "O armazenamento pode estar cheio ou bloqueado."
+    );
+
+    return;
+}
+
+renderizar();
+formulario.reset();
 });
 
 function renderizar() {
