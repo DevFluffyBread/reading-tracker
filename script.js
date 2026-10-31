@@ -44,7 +44,7 @@ formulario.addEventListener("submit", function(evento){
         titulo: tituloLimpo,
         autor: autorLimpo,
         capa: capa.value.trim(),
-        nota: nota.valueAsNumber,
+        nota: nota.value === "" ? null : nota.valueAsNumber,
         status: statusLeitura.value,
     };
 
@@ -79,6 +79,7 @@ formulario.addEventListener("submit", function(evento){
 
     renderizar();
     formulario.reset();
+    atualizarObrigatoriedadeNota();
 });
 
 function renderizar() {
@@ -94,7 +95,9 @@ function renderizar() {
         autorLivro.textContent = `Autor: ${livro.autor}`;
 
         const notaLivro = document.createElement("p");
-        notaLivro.textContent = `Nota: ${livro.nota}/10`;
+        notaLivro.textContent = livro.nota == null
+        ? "Sem avaliação"
+         : `Nota: ${livro.nota}/10`;
 
         const nomesStatus = {
             "quero-ler": "Quero ler",
@@ -136,8 +139,6 @@ function renderizar() {
         editarLivro(livro.id);
     });
 
-    
-
         item.appendChild(botaoEditar);
         item.appendChild(botaoExcluir);
         lista.appendChild(item);
@@ -174,6 +175,7 @@ function excluirLivro(id) {
         idEmEdicao = null;
         botaoSalvar.textContent = "Adicionar Livro";
         formulario.reset();
+        atualizarObrigatoriedadeNota();
     }
 
     renderizar();
@@ -195,7 +197,19 @@ function editarLivro(id) {
     capa.value = livro.capa;
     nota.value = livro.nota;
     statusLeitura.value = livro.status ?? "concluido";
+    atualizarObrigatoriedadeNota();
 
     botaoSalvar.textContent = "Salvar alterações";
     titulo.focus();
 }
+
+function atualizarObrigatoriedadeNota() {
+    nota.required = statusLeitura.value === "concluido";
+}
+
+statusLeitura.addEventListener(
+    "change",
+    atualizarObrigatoriedadeNota
+);
+
+atualizarObrigatoriedadeNota();
